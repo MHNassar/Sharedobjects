@@ -1,0 +1,15 @@
+{
+    "name": "es/sharedobjects",
+    "description": "shared and common objects Interfaces and communications",
+    "type": "library",
+    "license": "proprietary",
+    "version": "0.0.1",
+    "autoload": {
+        "psr-4": {
+            "Es\\Sharedobjects\\": ""
+        }
+    },
+    "require": {
+
+    }
+}
