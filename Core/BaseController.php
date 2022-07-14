@@ -14,21 +14,18 @@ class BaseController extends AbstractController
 {
     protected function getRequestObj(Request $request, string $requestClass): RequestInterface {
 
-        if ($request->getMethod() == Request::METHOD_POST) {
-            $requestBody = $request->getContent();
-            $parameters = json_decode($requestBody, true);
-        }
-        elseif ($request->getMethod() == Request::METHOD_GET)
-        {
-            $routParams = $request->attributes->get('_route_params');
-            $queryParams =$request->query->all();
-            $parameters = array_merge($routParams, $queryParams);
-        }
+        $routParams = $request->attributes->get('_route_params',[]);
+        $requestPayload = (json_decode($request->getContent(), true)) ?? [];
+        $queryParams =$request->query->all();
+
+        $parameters = array_merge($routParams,$requestPayload,$queryParams);
+
         $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
         $request = $normalizer->denormalize($parameters, $requestClass);
         $request->validate();
         return $request;
     }
+
     public function response(ResponseInterface $response) :JsonResponse {
         $encoders = [new JsonEncoder()];
         $responseNormalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
